@@ -1,0 +1,6 @@
+test
+coverage
+.env.*
+.env
+yarn-error.log
+yarn.lock

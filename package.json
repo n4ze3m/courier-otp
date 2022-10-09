@@ -1,0 +1,54 @@
+{
+  "name": "courier-otp",
+  "version": "0.0.3",
+  "description": "Simple OTP generator for Node.js",  
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=12.9.0"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "build": "tsc",
+    "test": "jest --config ./jest.config.ts"
+  },
+  "config": {
+    "blanket": {
+      "pattern": "lib",
+      "data-cover-never": "node_modules"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/n4ze3m/courier-otp.git"
+  },
+  "keywords": [
+    "OTP",
+    "redis",
+    "courier",
+    "courier-otp",
+    "auth"
+  ],
+  "author": "n4ze3m",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/n4ze3m/courier-otp/issues"
+  },
+  "homepage": "https://github.com/n4ze3m/courier-otp#readme",
+  "devDependencies": {
+    "@types/jest": "^29.1.2",
+    "dotenv": "^16.0.3",
+    "jest": "^29.1.2",
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "tsc": "^2.0.4",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@trycourier/courier": "^3.15.0",
+    "ioredis": "^5.2.3"
+  }
+}

@@ -24,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - run: |
-          npm ci
+          npm i
           npm run build
       - name: Create a release
         run: npx semantic-release@^18.0.0

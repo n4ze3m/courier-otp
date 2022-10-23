@@ -2,16 +2,78 @@ import Redis from 'ioredis'
 import { CourierClient } from '@trycourier/courier'
 import type { ICourierClient } from '@trycourier/courier'
 import type { ICourierOtp, ISendOtpOptions, IVerifyOtpOptions } from './types'
-
+/**
+ * @class CourierOtp
+ * @description A class to send and verify OTPs using Courier
+ * @param {ICourierOtp} options
+ * @param {string} options.redisUrl Redis URL
+ * @param {string} options.courierApiKey Courier API Key
+ * @param {string} options.courierTemplateId Courier Template ID
+ * @example
+ * import CourierOtp from 'courier-otp'
+ *
+ * const courierOtp = new CourierOtp({
+ *  redisUrl: 'redis://localhost:6379',
+ * courierApiKey: 'YOUR_COURIER_API_KEY',
+ * courierTemplateId: 'YOUR_COURIER_TEMPLATE_ID',
+ * })
+ *
+ * const result = await courierOtp.sendOtp({
+ * to: 'someone@example.com',
+ * type: 'email',
+ * })
+ *
+ * if (result) {
+ * const verifyResult = await courierOtp.verifyOtp({
+ * to: 'someone@example.com',
+ * type: 'email',
+ * otp: result.otp,
+ * })
+ *
+ * if (verifyResult.verify) {
+ * console.log('OTP verified')
+ * }
+ * }
+ *
+ */
 class OTP {
+  /**
+   * @property {string} courierApiKey
+   * @description Courier API Key
+   */
   public courierApiKey: string
+  /**
+   * @property {string} courierTemplateId
+   * @description Courier Template ID
+   */
   public courierTemplateId: string
-
+  /**
+   * @property {Redis} redis
+   * @description Redis client
+   */
   private redis: Redis
+  /**
+   * @property {ICourierClient} courierClient
+   * @description Courier Client
+   */
   private courierClient: ICourierClient
+  /**
+   * @property {number} _otpLength
+   * @description Default OTP length
+   */
   private _otpLength: number = 6
+  /**
+   * @property {number} _otpExpiry
+   * @description Default OTP expiry
+   */
   private _otpExpiry: number = 300
-
+  /**
+   * @constructor
+   * @param {ICourierOtp} options
+   * @param {string} options.redisUrl Redis URL
+   * @param {string} options.courierApiKey Courier API Key
+   * @param {string} options.courierTemplateId Courier Template ID
+   */
   constructor({ redisUrl, courierApiKey, courierTemplateId }: ICourierOtp) {
     this.courierApiKey = courierApiKey
     this.courierTemplateId = courierTemplateId
@@ -19,18 +81,33 @@ class OTP {
     this.redis = new Redis(redisUrl)
     this.courierClient = CourierClient({ authorizationToken: this.courierApiKey })
   }
-
-  private generateOtp(n: number) {
-    let otp = ''
-    for (let i = 0; i < n; i++) {
-      otp += Math.floor(Math.random() * 10)
-    }
-    return otp
+  /**
+   * @method _generateOtp
+   * @description Generate OTP
+   * @param {number} n
+   * @returns {string} OTP
+   * @private
+   */
+  private _generateOtp(n: number): string {
+    return Math.floor(Math.random() * 10 ** n).toString()
   }
-
-  public async sendOtp(options: ISendOtpOptions) {
+  /**
+   * @method sendOtp
+   * @description Send OTP
+   * @param {ISendOtpOptions} options
+   * @param {string} options.to Recipient
+   * @param {string} options.type Type of recipient
+   * @param {IOtpOptions} options.otpOptions OTP options
+   * @param {number} options.otpOptions.length OTP length
+   * @param {number} options.otpOptions.expiry OTP expiry
+   * @param {ICourierVariables} options.courierVariables Courier variables
+   * @returns {Promise<{ requestId: string; otp: string } | null>} OTP
+   */
+  public async sendOtp(
+    options: ISendOtpOptions
+  ): Promise<{ requestId: string; otp: string } | null> {
     try {
-      const otp = this.generateOtp(options?.otpOptions?.length || this._otpLength)
+      const otp = this._generateOtp(options?.otpOptions?.length || this._otpLength)
       const key = `${options.type}:${options.to}`
       const otpExists = await this.redis.get(key)
       if (otpExists) {
@@ -44,22 +121,34 @@ class OTP {
         message: {
           template: this.courierTemplateId,
           data: {
-            otp,
+            ...options.courierVariables,
+            otp: otp,
           },
-          to,
+          to: to,
         },
       })
       return {
-        requestId,
-        otp,
+        requestId: requestId,
+        otp: otp,
       }
     } catch (err) {
       console.log(err)
       return null
     }
   }
-
-  public async verifyOtp(options: IVerifyOtpOptions) {
+  /**
+   * @method verifyOtp
+   * @description Verify OTP
+   * @param {IVerifyOtpOptions} options
+   * @param {string} options.to Recipient
+   * @param {string} options.type Type of recipient
+   * @param {string} options.otp OTP
+   *
+   * @returns {Promise<{ verify: boolean, error: any | null, type: string}>} Verification result
+   */
+  public async verifyOtp(
+    options: IVerifyOtpOptions
+  ): Promise<{ verify: boolean; error: string | null; type: string }> {
     try {
       const key = `${options.type}:${options.to}`
       const otp = await this.redis.get(key)
@@ -80,13 +169,17 @@ class OTP {
       console.log(err)
       return {
         verify: false,
-        error: err,
+        error: 'Internal Server Error',
         type: 'ERROR',
       }
     }
   }
-
-  public redisClose() {
+  /**
+   * @method redisClose
+   * @description Close Redis connection
+   * @returns {void}
+   */
+  public redisClose(): void {
     this.redis.disconnect()
   }
 }

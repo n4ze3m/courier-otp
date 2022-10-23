@@ -24,30 +24,30 @@ _IMPORTANT_: In your Courier account, you need to create a new template with the
 `{otp}` variable. This variable will be replaced with the OTP code. Otherwise, users won't receive the OTP code.
 
 ```js
-const { CourierOtp } = require("courier-otp");
+const { CourierOtp } = require('courier-otp')
 
 const main = async () => {
   const courierOtp = new CourierOtp({
-    redisUrl: "<redis-url>",
-    courierApiKey: "<courier-api-key>",
-    courierTemplateId: "<courier-template-id>",
-  });
+    redisUrl: '<redis-url>',
+    courierApiKey: '<courier-api-key>',
+    courierTemplateId: '<courier-template-id>',
+  })
   // send otp
   const result = await courierOtp.sendOtp({
-    to: "you@example.com",
-    type: "email",
-  });
-  console.log(result);
+    to: 'you@example.com',
+    type: 'email',
+  })
+  console.log(result)
   // verify otp
   const verifyResult = await courierOtp.verifyOtp({
-    to: "you@example.com",
-    type: "email",
-    otp: "123456",
-  });
-  console.log(verifyResult);
-};
+    to: 'you@example.com',
+    type: 'email',
+    otp: '123456',
+  })
+  console.log(verifyResult)
+}
 
-main();
+main()
 ```
 
 ## API
@@ -75,6 +75,7 @@ Sends an OTP to the given email or phone number.
   - `otpOptions` - An object containing the following fields:
     - `length` - The length of the OTP. Default is `6`.
     - `expiry` - The expiry of the OTP in seconds. Default is `300` (5 minutes).
+  - `courierVariables` - An object containing the variables to be replaced in the courier template. Note that the `otp` variable is reserved for the OTP code.
 
 #### Returns
 
@@ -82,6 +83,8 @@ An object containing the following fields:
 
 - `requestId` - The request id from the courier api.
 - `otp` - The generated OTP.
+
+or null if the OTP is not sent.
 
 ### `verifyOtp(options)`
 

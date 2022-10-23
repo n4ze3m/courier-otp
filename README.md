@@ -1,9 +1,6 @@
 # Courier OTP
 
-This is a simple OTP generator built in the top of [Courier](https://courier.com) and [Redis](https://redis.io).
-
-_Note_: I built this package during a hackathon for my project. So, it's not production ready. Use it at your own risk.
-
+Custom OTP package for sending OTP via SMS and Email and verifying OTP. This package is built on top of [Courier](https://courier.com) and [Redis](https://redis.io/).
 
 ## Installation
 
@@ -108,10 +105,6 @@ An object containing the following fields:
 ## License
 
 MIT
-
-## Author
-
-[Muhammed Nazeem](https://n4ze3m.site)
 
 ## Contributing
 

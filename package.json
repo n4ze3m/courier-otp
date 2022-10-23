@@ -1,15 +1,12 @@
 {
   "name": "courier-otp",
-  "version": "0.0.3",
+  "version": "0.0.0-automated",
   "description": "Simple OTP generator for Node.js",  
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "engines": {
-    "node": ">=12.9.0"
-  },
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "tsc",

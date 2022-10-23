@@ -1,6 +1,6 @@
-export * from "./otp";
+export * from './otp'
 
-import { OTP as CourierOtp } from "./otp";
-export { CourierOtp };
+import { OTP as CourierOtp } from './otp'
+export { CourierOtp }
 
-export default CourierOtp;
+export default CourierOtp

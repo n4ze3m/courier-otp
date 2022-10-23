@@ -9,7 +9,7 @@ describe('OTP testing', () => {
       courierTemplateId: process.env!.COURIER_TEMPLATE_ID!,
     })
     const result = await courierOtp.sendOtp({
-      to: 'n4ze3m@gmail.com',
+      to: 'me@n4ze3m.site',
       type: 'email',
     })
     expect(Boolean(result)).toBeTruthy()
@@ -24,7 +24,7 @@ describe('OTP testing', () => {
     })
 
     const result = await courierOtp.verifyOtp({
-      to: 'n4ze3m@gmail.com',
+      to: 'me@n4ze3m.site',
       type: 'email',
       otp: '547689',
     })
@@ -40,13 +40,13 @@ describe('OTP testing', () => {
       courierTemplateId: process.env!.COURIER_TEMPLATE_ID!,
     })
     const result = await courierOtp.sendOtp({
-      to: 'n4ze3m@gmail.com',
+      to: 'me@n4ze3m.site',
       type: 'email',
     })
 
     if (result) {
       const verifyResult = await courierOtp.verifyOtp({
-        to: 'n4ze3m@gmail.com',
+        to: 'me@n4ze3m.site',
         type: 'email',
         otp: result.otp!,
       })

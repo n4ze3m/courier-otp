@@ -1,7 +1,7 @@
 {
   "name": "courier-otp",
   "version": "0.0.0-automated",
-  "description": "Simple OTP generator for Node.js",  
+  "description": "Send and Verify OTP using Courier & Redis",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

@@ -20,7 +20,7 @@ $ yarn add courier-otp
 
 To use this package, you need to have a [Courier](https://courier.com) account and a [Redis](https://redis.io) server.
 
-_IMPORTANT_: In your Courier account, you need to create a new template with the following
+_IMPORTANT_: In your Courier account, you need to create a new template with the
 `{otp}` variable. This variable will be replaced with the OTP code. Otherwise, users won't receive the OTP code.
 
 ```js
